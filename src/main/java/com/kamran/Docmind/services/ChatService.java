@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.kamran.Docmind.DTO.ConversationDto;
 import com.kamran.Docmind.DTO.MessageDto;
 import com.kamran.Docmind.Entity.Conversation;
 import com.kamran.Docmind.repository.ChatMessageRepository;
@@ -31,6 +32,28 @@ public class ChatService {
                 .stream()
                 .map(message -> new MessageDto(message.getType(), message.getContent(), message.getTimestamp()))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteConversation(String conversationId) {
+        Conversation conversation = conversationRepositry.findById(conversationId)
+                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+        if (conversation.isTemporary()) {
+            throw new RuntimeException("Cannot delete a temporary conversation");
+        }
+        conversation.setTemporary(true);
+        conversationRepositry.save(conversation);
+    }
+
+    public List<ConversationDto> getAllConversation(String userEmail){
+
+        List<Conversation>conversations= conversationRepositry.findByTemporary(false);
+
+        List<ConversationDto> conversationDtos=conversations.stream()
+                .map(conversation -> new ConversationDto(conversation.getId(), conversation.isTemporary(), conversation.getTitle(), conversation.getCreatedAt().toString()))
+                .collect(Collectors.toList());
+
+        return conversationDtos;
+
     }
     
 }

@@ -1,5 +1,6 @@
 package com.kamran.Docmind.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.ai.chat.client.ChatClient;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kamran.Docmind.DTO.ConversationDto;
 import com.kamran.Docmind.DTO.UserRequest;
 import com.kamran.Docmind.Entity.Conversation;
 import com.kamran.Docmind.record.ChatResponde;
 import com.kamran.Docmind.services.ChatHistoryServices;
+import com.kamran.Docmind.services.ChatService;
 
 @RestController
 @RequestMapping("/")
@@ -25,15 +28,17 @@ public class Home {
     private final ChatClient chatClient;
     private final ChatHistoryServices chatHistoryServices;
 
-    Home(ChatClient chatClient, ChatHistoryServices chatHistoryServices) {
+    private final ChatService chatService;
+
+    Home(ChatClient chatClient, ChatHistoryServices chatHistoryServices, ChatService chatService) {
         this.chatClient = chatClient;
         this.chatHistoryServices = chatHistoryServices;
+        this.chatService = chatService;
     }
 
     @GetMapping
-    public String home() {
-
-        return "home";
+    public List<ConversationDto> home() {
+        return chatService.getAllConversation(null);
     }
 
     @PostMapping("/ask")
