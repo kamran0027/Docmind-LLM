@@ -28,4 +28,7 @@ public class FileDetails {
 
     private String type;
 
+    @Column(unique = true)
+    private String documnetId;
+
 }

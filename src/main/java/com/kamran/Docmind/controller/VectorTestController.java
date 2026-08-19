@@ -2,14 +2,18 @@ package com.kamran.Docmind.controller;
 
 import java.util.List;
 
+import org.apache.http.protocol.HTTP;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.kamran.Docmind.services.VectorDatabseServices;
 
 @RestController
 @RequestMapping("/api/vector")
@@ -17,8 +21,11 @@ public class VectorTestController {
 
     public final VectorStore vectorStore;
 
-    VectorTestController(VectorStore vectorStore){
+    public final VectorDatabseServices vectorDatabseServices;
+
+    VectorTestController(VectorStore vectorStore,VectorDatabseServices vectorDatabseServices){
         this.vectorStore=vectorStore;
+        this.vectorDatabseServices=vectorDatabseServices;
     }
 
     @PostMapping("/add")
@@ -37,14 +44,9 @@ public class VectorTestController {
     }
 
     @GetMapping("/search")
-    public List<Document> search(@RequestParam String query) {
-
-        return vectorStore.similaritySearch(
-                SearchRequest.builder()
-                        .query(query)
-                        .topK(3)
-                        .build()
-        );
+    public List<Document> search(@RequestParam String id,@RequestParam String query) {
+        
+        return vectorDatabseServices.simaliritySearch(query, id);
     }
 
 }

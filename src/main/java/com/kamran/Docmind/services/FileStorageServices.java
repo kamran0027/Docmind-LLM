@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public class FileStorageServices {
         this.fileDetailsRepository = fileDetailsRepository;
     }
 
-    public Boolean uploadFile(MultipartFile file) {
+    public boolean uploadFile(MultipartFile file,String uuid) {
         try {
             File directory=new File(UPLOAD_DIR);
 
@@ -32,15 +33,14 @@ public class FileStorageServices {
                 System.out.println("Directoiry created : "+UPLOAD_DIR);
                 directory.mkdir();
             }
-
-            Path filPath=Paths.get(UPLOAD_DIR+file.getOriginalFilename());
+            Path filPath=Paths.get(UPLOAD_DIR+file.getOriginalFilename()+uuid);
             Files.write(filPath,file.getBytes());
 
-            
             FileDetails fileDetails = new FileDetails();
             fileDetails.setName(file.getOriginalFilename());
             fileDetails.setUrl(filPath.toString());
             fileDetails.setType(file.getContentType());
+            fileDetails.setDocumnetId(uuid);
 
             fileDetailsRepository.save(fileDetails);
 
@@ -51,9 +51,9 @@ public class FileStorageServices {
         }
     }
 
-    public String getFilePathById(long id) {
-        FileDetails fileDetails = fileDetailsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("File not found with id: " + id));
+    public String getFilePathById(String documentId) {
+        FileDetails fileDetails = fileDetailsRepository.findByDocumnetId(documentId)
+                .orElseThrow(() -> new RuntimeException("File not found with id: " + documentId));
         return fileDetails.getUrl();
     }
 

@@ -6,7 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.kamran.Docmind.Entity.FileDetails;
 
+
+
 public interface FileDetailsRepository extends JpaRepository<FileDetails, Long> {
-    Optional<FileDetails> findByUrl(String url);    
+    Optional<FileDetails> findByUrl(String url);
+    Optional<FileDetails> findByDocumnetId(String documnetId);
 
 }
