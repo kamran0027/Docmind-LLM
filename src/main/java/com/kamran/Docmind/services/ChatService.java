@@ -1,6 +1,7 @@
 package com.kamran.Docmind.services;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class ChatService {
         }
         return chatMessageRepository.findByConversationIdOrderBySequenceIdDesc(conversationId)
                 .stream()
-                .map(message -> new MessageDto(message.getType(), message.getContent(), message.getTimestamp()))
+                .map(message -> new MessageDto(conversationId,message.getType(), message.getContent(), message.getTimestamp()))
                 .collect(Collectors.toList());
     }
 

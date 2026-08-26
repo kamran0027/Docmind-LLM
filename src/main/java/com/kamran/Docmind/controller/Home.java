@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ public class Home {
 
     private final ChatService chatService;
 
-    Home(ChatClient chatClient, ChatHistoryServices chatHistoryServices, ChatService chatService) {
+    Home(@Qualifier("simpleChatClient") ChatClient chatClient, ChatHistoryServices chatHistoryServices, ChatService chatService) {
         this.chatClient = chatClient;
         this.chatHistoryServices = chatHistoryServices;
         this.chatService = chatService;
@@ -47,7 +48,7 @@ public class Home {
         Conversation conversation = chatHistoryServices.createConversation(temporary);
         String conversationId = conversation.getId();
 
-        // savinf user message
+        // save user message
         chatHistoryServices.saveUserMessage(conversationId, request.getUserInput());
 
         String response = chatClient.prompt()

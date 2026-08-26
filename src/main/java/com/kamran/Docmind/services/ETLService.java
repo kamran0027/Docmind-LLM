@@ -17,11 +17,11 @@ public class ETLService {
 
     private final TokenTextSplitter splitter;
 
-    private final VectorDatabseServices vectorDatabseServices;
+    private final VectorDatabaseServices vectorDatabaseServices;
 
-    public ETLService(FileStorageServices fileStorageServices,VectorDatabseServices vectorDatabseServices) {
+    public ETLService(FileStorageServices fileStorageServices,VectorDatabaseServices vectorDatabaseServices) {
         this.fileStorageServices = fileStorageServices;
-        this.vectorDatabseServices=vectorDatabseServices;
+        this.vectorDatabaseServices=vectorDatabaseServices;
         this.splitter=TokenTextSplitter.builder()
                 .withChunkSize(800)
                 .withMinChunkSizeChars(350)
@@ -29,7 +29,7 @@ public class ETLService {
                 .build();
     }
 
-    public List<Document> readDocument(String documentId){
+    public List<Document> readDocument(String documentId,String conversationId,String userId){
 
         String path = fileStorageServices.getFilePathById(documentId);
 
@@ -40,7 +40,7 @@ public class ETLService {
         Resource resource=new FileSystemResource(path);
 
         
-        return readDocument(resource,documentId);
+        return readDocument(resource,documentId,conversationId,userId);
 
         // PagePdfDocumentReader pdfReader = new PagePdfDocumentReader(path, PdfDocumentReaderConfig.builder()
         //         .withPageTopMargin(0)
@@ -53,7 +53,7 @@ public class ETLService {
     }
 
 
-    public List<Document> readDocument(Resource resource,String documentId){
+    public List<Document> readDocument(Resource resource,String documentId,String conversationId,String userId){
 
         PagePdfDocumentReader pdfReader = new PagePdfDocumentReader(resource, PdfDocumentReaderConfig.builder()
                 .withPageTopMargin(0)
@@ -67,6 +67,8 @@ public class ETLService {
         // 2. Add metadata to every page
         pages.forEach(page -> {
             page.getMetadata().put("documentId",documentId);
+            page.getMetadata().put("conversationId",conversationId);
+            page.getMetadata().put("userId",userId);
             page.getMetadata().put(
                     "fileName",
                     resource.getFilename()
@@ -75,7 +77,7 @@ public class ETLService {
 
         List<Document> documents=splitDocumnet(pages);
 
-        vectorDatabseServices.addDocuments(documents);
+        vectorDatabaseServices.addDocuments(documents);
 
         return documents;
     }

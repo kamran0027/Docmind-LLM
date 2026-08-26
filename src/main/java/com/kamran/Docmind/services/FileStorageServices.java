@@ -9,8 +9,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kamran.Docmind.Entity.FileDetails;
-import com.kamran.Docmind.repository.FileDetailsRepository;
+import com.kamran.Docmind.Entity.Attachment;
+import com.kamran.Docmind.repository.AttachmentRepository;
+
+
 
 @Service
 public class FileStorageServices {
@@ -18,10 +20,10 @@ public class FileStorageServices {
     public static final String UPLOAD_DIR = "uploads/";
 
 
-    private final FileDetailsRepository fileDetailsRepository;
+    private final AttachmentRepository attachmentRepository;
 
-    public FileStorageServices(FileDetailsRepository fileDetailsRepository) {
-        this.fileDetailsRepository = fileDetailsRepository;
+    public FileStorageServices(AttachmentRepository attachmentRepository) {
+        this.attachmentRepository =attachmentRepository;
     }
 
     public boolean uploadFile(MultipartFile file,String uuid) {
@@ -36,13 +38,13 @@ public class FileStorageServices {
             Path filPath=Paths.get(UPLOAD_DIR+file.getOriginalFilename()+uuid);
             Files.write(filPath,file.getBytes());
 
-            FileDetails fileDetails = new FileDetails();
-            fileDetails.setName(file.getOriginalFilename());
-            fileDetails.setUrl(filPath.toString());
-            fileDetails.setType(file.getContentType());
-            fileDetails.setDocumnetId(uuid);
+            Attachment attachment = new Attachment();
+            attachment.setName(file.getOriginalFilename());
+            attachment.setUrl(filPath.toString());
+            attachment.setType(file.getContentType());
+            attachment.setDocumnetId(uuid);
 
-            fileDetailsRepository.save(fileDetails);
+            attachmentRepository.save(attachment);
 
             return true;
 
@@ -52,9 +54,9 @@ public class FileStorageServices {
     }
 
     public String getFilePathById(String documentId) {
-        FileDetails fileDetails = fileDetailsRepository.findByDocumnetId(documentId)
+        Attachment attachment = attachmentRepository.findByDocumnetId(documentId)
                 .orElseThrow(() -> new RuntimeException("File not found with id: " + documentId));
-        return fileDetails.getUrl();
+        return attachment.getUrl();
     }
 
 

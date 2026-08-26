@@ -45,7 +45,7 @@ public class ETLController {
     }
     @GetMapping("/documents/{id}")
     public List<Document> getAllDocuments(@PathVariable("id") String id){
-        return etlService.readDocument(id);
+        return etlService.readDocument(id,"0","0");
     }
 
     @PostMapping("/documents")
@@ -58,7 +58,7 @@ public class ETLController {
             System.out.println("document id : " + uuid);
             System.out.println("*************************************************************");
             
-            List<Document> documents= etlService.readDocument(resource,uuid);
+            List<Document> documents= etlService.readDocument(resource,uuid,"a","a");
             return documents;
 
         } catch (Exception e) {

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.checkerframework.checker.units.qual.t;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,4 +50,24 @@ public class Conversation {
 
     )
     private List<ChatMessage> messages = new ArrayList<>();
+
+
+    @OneToMany(
+        fetch=FetchType.LAZY,
+        mappedBy="conversation",
+        cascade=CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<Attachment> attachments=new ArrayList<>();
+
+
+     public void addAttachment(Attachment attachment) {
+        attachments.add(attachment);
+        attachment.setConversation(this);
+    }
+
+    public void removeAttachment(Attachment attachment) {
+        attachments.remove(attachment);
+        attachment.setConversation(null);
+    }
 }

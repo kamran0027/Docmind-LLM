@@ -8,11 +8,11 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 
 @Service
-public class VectorDatabseServices {
+public class VectorDatabaseServices {
 
     private final VectorStore vectorStore;
 
-    VectorDatabseServices(VectorStore vectorStore){
+    VectorDatabaseServices(VectorStore vectorStore){
         this.vectorStore=vectorStore;
     }
 
@@ -20,7 +20,7 @@ public class VectorDatabseServices {
         vectorStore.add(documents);
     }
 
-    public List<Document> simaliritySearch(String query){
+    public List<Document> similaritySearch(String query){
 
         return vectorStore.similaritySearch(SearchRequest.builder()
                                     .query(query)
@@ -29,7 +29,7 @@ public class VectorDatabseServices {
     
     }
 
-    public List<Document> simaliritySearch(String query,String documentId){
+    public List<Document> similaritySearch(String query,String documentId){
 
         return vectorStore.similaritySearch(SearchRequest.builder()
                                     .query(query)

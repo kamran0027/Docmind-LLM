@@ -14,8 +14,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MessageDto {
-
-    private MessageType type;
+    private String conversationId;
+    private MessageType messageType;
     private String content;
     private LocalDateTime timestamp;
 
