@@ -58,8 +58,10 @@ public class ConversationController {
                             
     }
 
-    @GetMapping("/{conversationId}")
-    public List<MessageDto> getConversationMessages(@PathVariable String conversationId) {
+    @GetMapping("/{id}")
+    public List<MessageDto> getConversationMessages(@PathVariable("id") String conversationId) {
+        System.out.println("*******************************");
+        System.out.println(conversationId);
         return chatService.getConversationMessages(conversationId);
     }
 

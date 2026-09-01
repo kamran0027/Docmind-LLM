@@ -62,20 +62,23 @@ public class ETLService {
                         .build())
                 .withPagesPerDocument(1)
                 .build());
-        List<Document> pages=pdfReader.read();
+
+        // PagePdfDocumentReader pdfReader = new PagePdfDocumentReader(resource, PdfDocumentReaderConfig.builder()
+        //         .withPagesPerDocument(1)
+        //         .build());
+        List<Document> pages = pdfReader.read();
 
         // 2. Add metadata to every page
         pages.forEach(page -> {
-            page.getMetadata().put("documentId",documentId);
-            page.getMetadata().put("conversationId",conversationId);
-            page.getMetadata().put("userId",userId);
+            page.getMetadata().put("documentId", documentId);
+            page.getMetadata().put("conversationId", conversationId);
+            page.getMetadata().put("userId", userId);
             page.getMetadata().put(
                     "fileName",
-                    resource.getFilename()
-            );
+                    resource.getFilename());
         });
 
-        List<Document> documents=splitDocumnet(pages);
+        List<Document> documents = splitDocumnet(pages);
 
         vectorDatabaseServices.addDocuments(documents);
 
