@@ -1,15 +1,20 @@
 package com.kamran.Docmind.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.kamran.Docmind.DTO.ConversationDto;
 import com.kamran.Docmind.Entity.ChatMessage;
 import com.kamran.Docmind.Entity.Conversation;
 import com.kamran.Docmind.Entity.MessageType;
 import com.kamran.Docmind.repository.ChatMessageRepository;
 import com.kamran.Docmind.repository.ConversationRepositry;
+import com.kamran.Docmind.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -20,14 +25,20 @@ public class ChatHistoryServices{
 
     private ChatMessageRepository chatMessageRepository;
 
-    public ChatHistoryServices(ConversationRepositry conversationRepositry, ChatMessageRepository chatMessageRepository) {
+    private UserRepository userRepository;
+
+    public ChatHistoryServices(ConversationRepositry conversationRepositry, ChatMessageRepository chatMessageRepository, UserRepository userRepository) {
         this.conversationRepositry = conversationRepositry;
         this.chatMessageRepository = chatMessageRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
     public Conversation createConversation(boolean temporary){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Conversation conversation=new Conversation();
+        userRepository.findByEmail(auth.getName())
+                    .ifPresent(conversation::setUser);
 
         LocalDateTime time=LocalDateTime.now();
         conversation.setId(UUID.randomUUID().toString());
@@ -67,6 +78,21 @@ public class ChatHistoryServices{
         conversation.setUpdatedAt(LocalDateTime.now());
         conversationRepositry.save(conversation);
 
+    }
+
+    public List<ConversationDto> getConversationByUserEmail(String email){
+        
+        List<Conversation> conversations=conversationRepositry.findByUserEmailAndTemporaryFalseOrderByUpdatedAtDesc(email);
+        List<ConversationDto> dtos=conversations.stream()
+                                    .map( conversation ->{
+                                        ConversationDto dto =new ConversationDto();
+                                        dto.setId(conversation.getId());
+                                        dto.setTitle(conversation.getTitle());
+                                        dto.setCreatedAt(conversation.getCreatedAt().toString());
+
+                                        return dto;
+                                    }).toList();
+        return dtos;
     }
     
 }

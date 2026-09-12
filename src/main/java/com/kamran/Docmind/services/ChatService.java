@@ -1,5 +1,6 @@
 package com.kamran.Docmind.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,10 +30,12 @@ public class ChatService {
         if (conversation.isTemporary()) {
             throw new RuntimeException("Cannot retrieve messages for a temporary conversation");
         }
-        return chatMessageRepository.findByConversationIdOrderBySequenceIdDesc(conversationId)
+        List<MessageDto> messageDtos = chatMessageRepository.findByConversationIdOrderBySequenceIdDesc(conversationId)
                 .stream()
                 .map(message -> new MessageDto(conversationId,message.getType(), message.getContent(), message.getTimestamp()))
                 .collect(Collectors.toList());
+        Collections.reverse(messageDtos); // Reverse the list to have the latest messages at the bottom
+        return messageDtos;
     }
 
     public void deleteConversation(String conversationId) {

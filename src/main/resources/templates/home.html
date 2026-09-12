@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocMind - AI Chat Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/home-style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Logo -->
+            <div class="sidebar-header">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>New chat</span>
+                </button>
+            </div>
+
+            <!-- Conversations List -->
+            <div class="conversations-section">
+                <div class="section-title">Conversations</div>
+                <div id="conversationsList" class="conversations-list">
+                    <div class="loading-skeleton">
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Footer - Profile -->
+            <div class="sidebar-footer">
+                <button class="profile-btn" id="profileBtn">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </button>
+                <button class="settings-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Header -->
+            <header class="chat-header">
+                <div class="header-content">
+                    <h1 id="chatTitle">DocMind</h1>
+                    <div class="status-badge">
+                        <span id="statusIndicator" class="status-dot"></span>
+                        <span id="statusText">Connecting...</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Chat Container -->
+            <div class="chat-content">
+                <!-- Welcome Screen -->
+                <div id="welcomeScreen" class="welcome-screen">
+                    <div class="welcome-container">
+                        <div class="welcome-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h2>How can I help you today?</h2>
+                        <p class="welcome-subtitle">Upload a document or ask a question to get started</p>
+
+                        <div class="quick-prompts">
+                            <button class="prompt-card" data-prompt="Summarize the document">
+                                <i class="fas fa-file-alt"></i>
+                                <div>
+                                    <strong>Summarize</strong>
+                                    <small>Get a quick overview</small>
+                                </div>
+                            </button>
+                            <button class="prompt-card" data-prompt="What are the key points?">
+                                <i class="fas fa-lightbulb"></i>
+                                <div>
+                                    <strong>Key Points</strong>
+                                    <small>Find important information</small>
+                                </div>
+                            </button>
+                            <button class="prompt-card" data-prompt="Explain this in simple language">
+                                <i class="fas fa-graduation-cap"></i>
+                                <div>
+                                    <strong>Explain</strong>
+                                    <small>Simplify complex ideas</small>
+                                </div>
+                            </button>
+                            <button class="prompt-card" data-prompt="Extract all important dates and numbers">
+                                <i class="fas fa-chart-bar"></i>
+                                <div>
+                                    <strong>Extract Data</strong>
+                                    <small>Get structured info</small>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Area -->
+                <div id="messagesArea" class="messages-area d-none">
+                    <div id="messagesList" class="messages-list">
+                        <!-- Messages will be appended here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <div class="input-wrapper">
+                    <div id="filePreview" class="file-preview d-none"></div>
+
+                    <div class="input-controls">
+                        <button class="input-btn" id="attachBtn" title="Attach document">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <input type="file" id="fileInput" hidden accept=".pdf,.txt,.md,.doc,.docx,.jpg,.png,.jpeg"
+                            multiple>
+                        <textarea id="messageInput" class="message-input" placeholder="Message DocMind..."
+                            rows="1"></textarea>
+
+                        <button class="input-btn send-btn" id="sendBtn" title="Send message">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </div>
+
+                    <div class="input-hint">
+                        DocMind can help with documents. Press Enter to send, Shift+Enter for new line
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/home-app.js"></script>
+</body>
+
+</html>

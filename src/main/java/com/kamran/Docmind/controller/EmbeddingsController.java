@@ -9,14 +9,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/embeddings")
 public class EmbeddingsController {
 
-    // private final EmbeddingModel embeddingModel;
-
-    // EmbeddingsController(EmbeddingModel embeddingModel){
-    //     this.embeddingModel=embeddingModel;
-    // }
-
-
-
-
 
 }

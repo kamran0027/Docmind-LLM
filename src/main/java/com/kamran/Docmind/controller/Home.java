@@ -1,6 +1,5 @@
 package com.kamran.Docmind.controller;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.ai.chat.client.ChatClient;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kamran.Docmind.DTO.ConversationDto;
 import com.kamran.Docmind.DTO.UserRequest;
 import com.kamran.Docmind.Entity.Conversation;
 import com.kamran.Docmind.record.ChatResponde;
@@ -37,10 +35,11 @@ public class Home {
         this.chatService = chatService;
     }
 
-    @GetMapping
-    public List<ConversationDto> home() {
-        return chatService.getAllConversation(null);
+    @GetMapping("/home")
+    public String home(@RequestParam(defaultValue = "not present", name = "token") String token) {
+        return "Welcome to the Home Page this is your token :"+token;
     }
+
 
     @PostMapping("/ask")
     public ChatResponde tempAsk(@RequestParam(value = "temporary-chat",defaultValue = "false") Boolean temporary, @RequestBody UserRequest request) {
@@ -59,7 +58,6 @@ public class Home {
         // saving assistent message
         chatHistoryServices.saveAssistantMessage(conversationId, response);
         return new ChatResponde(conversationId, response);
-
     }
 
     @PostMapping("/ask/{conversationId}")

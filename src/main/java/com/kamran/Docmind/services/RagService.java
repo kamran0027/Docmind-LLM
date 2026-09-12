@@ -18,12 +18,27 @@ public class RagService {
 
     private final ChatClient advanceChatClient;
 
-    RagService(@Qualifier("questionAnswerChatClient")ChatClient questionAnswerChatClient,
+    private final ChatClient simpleChatClient;
+
+    RagService(@Qualifier("simpleChatClient") ChatClient simpleChatClient,
+                        @Qualifier("questionAnswerChatClient")ChatClient questionAnswerChatClient,
                         @Qualifier("advanceRagChatClient") ChatClient advanceChatClient){
         this.questionAnswerChatClient=questionAnswerChatClient;
         this.advanceChatClient=advanceChatClient;
+        this.simpleChatClient=simpleChatClient;
+
     }
 
+    public String simpleChat(Request request){
+        return simpleChatClient.prompt()
+                .advisors(advisorSpec ->advisorSpec.param(
+                                ChatMemory.CONVERSATION_ID
+                                ,request.getConversationId())
+                )
+                .user(request.getUserQuery())
+                .call()
+                .content();
+    }
 
     public String normalRAGChat(Request request){
 
