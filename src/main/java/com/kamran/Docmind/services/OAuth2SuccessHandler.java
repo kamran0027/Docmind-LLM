@@ -31,7 +31,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler{
 
             String email=aOAuth2User.getAttribute("email");
             String token=jwtService.generateToken(email);
-
             
             Cookie cookie=new Cookie("JWT",token);
             cookie.setHttpOnly(true);

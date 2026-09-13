@@ -38,14 +38,23 @@
 </head>
 <body>
 <main class="container d-flex align-items-center justify-content-center py-5">
+	
 	<section class="registration-card card w-100 p-4 p-sm-5">
 		<div class="text-center mb-4">
 			<div class="brand-mark mx-auto mb-3">D</div>
 			<h1 class="h3 fw-bold mb-2">Create your account</h1>
 			<p class="text-secondary mb-0">Join Docmind and keep your documents organized.</p>
 		</div>
+		<!-- error -->
+		<div class="alert alert-danger" th:if="${error}">
+			<p th:text="${error}"></p>
+		</div>
+		<!-- success -->
+		<div class="alert alert-success" th:if="${success}">
+			<p th:text="${success}"></p>
+		</div>
 
-		<form th:action="@{/register}" th:object="${userRegistration}" method="post">
+		<form th:action="@{/auth/registration}" th:object="${userRegistration}" method="post">
 			<div class="mb-3">
 				<label for="name" class="form-label fw-semibold">Name</label>
 				<input type="text" id="name" class="form-control" th:field="*{name}"

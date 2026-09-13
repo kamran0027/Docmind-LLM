@@ -9,29 +9,55 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link th:href="@{https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap}" rel="stylesheet">
 	<style>
-		:root { --ink: #17233c; --muted: #78839a; --blue: #4969e8; }
-		body { min-height: 100vh; color: var(--ink); font-family: 'DM Sans', sans-serif; background: #f5f7fc; }
-		.login-shell { min-height: 100vh; }
-		.art-panel { position: relative; overflow: hidden; min-height: 100vh; padding: 4rem; color: white; background: linear-gradient(145deg, #263a91 0%, #4969e8 55%, #8a9ef5 100%); }
-		.art-panel::before, .art-panel::after { content: ''; position: absolute; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; }
-		.art-panel::before { width: 520px; height: 520px; right: -210px; top: -130px; }
-		.art-panel::after { width: 390px; height: 390px; left: -210px; bottom: -150px; }
-		.brand { position: relative; z-index: 1; font-weight: 700; letter-spacing: .04em; }
-		.art-copy { position: relative; z-index: 1; max-width: 430px; margin-top: 30vh; }
-		.art-copy h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 4vw, 4.2rem); line-height: 1.08; }
-		.form-panel { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
-		.login-card { width: min(100%, 430px); }
-		.login-card h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; }
+		:root { --ink: #1a202c; --muted: #718096; --blue: #5a67d8; --light-bg: #f7fafc; --border: #e2e8f0; }
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { min-height: 100vh; color: var(--ink); font-family: 'DM Sans', sans-serif; background: var(--light-bg); }
+		.login-shell { min-height: 100vh; display: flex; flex-direction: column; }
+		.art-panel { position: relative; overflow: hidden; padding: 2rem; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; flex-direction: column; justify-content: space-between; min-height: 100vh; }
+		.art-panel::before { content: ''; position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 50px 50px; top: -50px; right: -50px; animation: float 20s infinite ease-in-out; }
+		.art-panel::after { content: ''; position: absolute; width: 300px; height: 300px; border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; bottom: -100px; left: -50px; animation: float 25s infinite ease-in-out reverse; }
+		@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(20px); } }
+		.brand { position: relative; z-index: 1; font-weight: 700; letter-spacing: .04em; font-size: 1.5rem; }
+		.art-copy { position: relative; z-index: 1; max-width: 450px; }
+		.art-copy h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.2; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+		.art-copy p { opacity: 0.95; line-height: 1.6; }
+		.form-panel { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem; }
+		.login-card { width: min(100%, 460px); background: white; border-radius: 16px; padding: 3rem 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+		.login-card h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 0.5rem; }
 		.subtitle, .form-label, .small-link { color: var(--muted); }
-		.form-control { border: 1px solid #e1e5ef; border-radius: 12px; padding: .85rem 1rem; }
-		.form-control:focus { border-color: var(--blue); box-shadow: 0 0 0 .2rem rgba(73,105,232,.15); }
-		.btn-primary { border: 0; border-radius: 12px; padding: .85rem; background: var(--blue); box-shadow: 0 8px 18px rgba(73,105,232,.22); }
-		.btn-primary:hover { background: #3857d4; }
-		.google-btn { border: 1px solid #e1e5ef; border-radius: 12px; padding: .8rem; color: var(--ink); background: white; }
-		.google-btn:hover { background: #f8f9fc; }
-		.google-icon { width: 19px; margin-right: .5rem; }
-		.divider { display: flex; align-items: center; gap: 1rem; color: #a4acbd; font-size: .82rem; }
-		.divider::before, .divider::after { content: ''; height: 1px; flex: 1; background: #e3e7ef; }
+		.form-label { font-weight: 500; font-size: 0.95rem; }
+		.form-control { border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.95rem; transition: all 0.3s ease; }
+		.form-control:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(90,103,216,0.1); outline: none; }
+		.form-control::placeholder { color: #cbd5e0; }
+		.btn-primary { border: 0; border-radius: 10px; padding: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102,126,234,0.4); color: white; font-weight: 600; transition: all 0.3s ease; }
+		.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); background: linear-gradient(135deg, #5568d3 0%, #6a3f92 100%); color: white; }
+		.btn-primary:active { transform: translateY(0); }
+		.google-btn { border: 1.5px solid var(--border); border-radius: 10px; padding: 0.75rem; color: var(--ink); background: white; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 500; }
+		.google-btn:hover { background: var(--light-bg); border-color: var(--blue); color: var(--blue); }
+		.google-icon { width: 18px; height: 18px; flex-shrink: 0; }
+		.divider { display: flex; align-items: center; gap: 1rem; color: #a0aec0; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+		.divider::before, .divider::after { content: ''; height: 1px; flex: 1; background: var(--border); }
+		.form-check-input { border-color: var(--border); cursor: pointer; }
+		.form-check-input:checked { background-color: var(--blue); border-color: var(--blue); }
+		.form-check-label { cursor: pointer; font-size: 0.9rem; }
+		.small-link { transition: color 0.2s ease; }
+		.small-link:hover { color: var(--blue); }
+		.alert { border: none; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; }
+		.alert p { margin: 0; }
+		.alert-danger { background-color: #fed7d7; color: #742a2a; }
+		.alert-success { background-color: #c6f6d5; color: #22543d; }
+		@media (max-width: 991.98px) {
+			.art-panel { min-height: auto; padding: 3rem 2rem; }
+			.login-card { padding: 2.5rem 1.5rem; }
+			.art-copy h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+		}
+		@media (max-width: 576px) {
+			.login-shell { min-height: auto; }
+			.art-panel { min-height: auto; padding: 2rem 1.5rem; }
+			.login-card { padding: 2rem 1.5rem; margin-bottom: 1rem; }
+			.login-card h2 { font-size: 1.8rem; }
+			.form-panel { min-height: auto; padding: 1rem; }
+		}
 	</style>
 </head>
 <body>
@@ -51,8 +77,16 @@
 				<h2 class="mb-2">Log in to Docmind</h2>
 				<p class="subtitle mb-0">Enter your details to continue your journey.</p>
 			</div>
+			<!-- error -->
+			<div class="alert alert-danger" th:if="${error}">
+				<p th:text="${error}"></p>
+			</div>
+			<!-- success -->
+			<div class="alert alert-success" th:if="${success}">
+				<p th:text="${success}"></p>
+			</div>
 
-			<form th:action="@{/login}" th:object="${userLogin}" method="post">
+			<form th:action="@{/auth/login}" th:object="${userLogin}" method="post">
 				<div class="mb-3">
 					<label for="email" class="form-label fw-semibold">Email</label>
 					<input type="email" class="form-control" th:field="*{email}" id="email" placeholder="you@example.com" autocomplete="username" required>

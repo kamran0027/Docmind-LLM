@@ -23,7 +23,6 @@ public class UserService {
 
     public User registerOrUpdate(String provider,OidcUser oidcUser){
         String subject=oidcUser.getSubject();
-
         String name=oidcUser.getClaimAsString("name");
         String email=oidcUser.getClaimAsString("email");
 
