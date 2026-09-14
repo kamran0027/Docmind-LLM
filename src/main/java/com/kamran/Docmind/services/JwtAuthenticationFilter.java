@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     protected void doFilterInternal(HttpServletRequest request, 
                     HttpServletResponse response, FilterChain filterChain) throws ServletException,IOException{
 
-
         // in this we first extract jwt token  from the header if it is not present then we extract from the Cookies
         String authHeader=request.getHeader("Authorization");
 

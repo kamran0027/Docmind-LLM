@@ -20,19 +20,17 @@ public class UserService {
         this.userRepository=userRepository;
     }
 
-
     public User registerOrUpdate(String provider,OidcUser oidcUser){
         String subject=oidcUser.getSubject();
         String name=oidcUser.getClaimAsString("name");
         String email=oidcUser.getClaimAsString("email");
 
-        Optional<User> existingUser=userRepository.findByProviderAndProviderSubject(provider,subject);
-
+        // Optional<User> existingUser=userRepository.findByProviderAndProviderSubject(provider,subject);
+        Optional<User> existingUser=userRepository.findByEmail(email);
         if(existingUser.isPresent()){
             User user=existingUser.get();
             user.setEmail(email);
             user.setName(name);
-
             return user;
         }
         User newUser=new User();

@@ -1,119 +1,1150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Log in | Docmind</title>
-	<link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css}" rel="stylesheet">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link th:href="@{https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap}" rel="stylesheet">
-	<style>
-		:root { --ink: #1a202c; --muted: #718096; --blue: #5a67d8; --light-bg: #f7fafc; --border: #e2e8f0; }
-		* { margin: 0; padding: 0; box-sizing: border-box; }
-		body { min-height: 100vh; color: var(--ink); font-family: 'DM Sans', sans-serif; background: var(--light-bg); }
-		.login-shell { min-height: 100vh; display: flex; flex-direction: column; }
-		.art-panel { position: relative; overflow: hidden; padding: 2rem; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; flex-direction: column; justify-content: space-between; min-height: 100vh; }
-		.art-panel::before { content: ''; position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 50px 50px; top: -50px; right: -50px; animation: float 20s infinite ease-in-out; }
-		.art-panel::after { content: ''; position: absolute; width: 300px; height: 300px; border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; bottom: -100px; left: -50px; animation: float 25s infinite ease-in-out reverse; }
-		@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(20px); } }
-		.brand { position: relative; z-index: 1; font-weight: 700; letter-spacing: .04em; font-size: 1.5rem; }
-		.art-copy { position: relative; z-index: 1; max-width: 450px; }
-		.art-copy h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.2; margin-top: 1.5rem; margin-bottom: 1.5rem; }
-		.art-copy p { opacity: 0.95; line-height: 1.6; }
-		.form-panel { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem; }
-		.login-card { width: min(100%, 460px); background: white; border-radius: 16px; padding: 3rem 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
-		.login-card h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 0.5rem; }
-		.subtitle, .form-label, .small-link { color: var(--muted); }
-		.form-label { font-weight: 500; font-size: 0.95rem; }
-		.form-control { border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.95rem; transition: all 0.3s ease; }
-		.form-control:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(90,103,216,0.1); outline: none; }
-		.form-control::placeholder { color: #cbd5e0; }
-		.btn-primary { border: 0; border-radius: 10px; padding: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102,126,234,0.4); color: white; font-weight: 600; transition: all 0.3s ease; }
-		.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); background: linear-gradient(135deg, #5568d3 0%, #6a3f92 100%); color: white; }
-		.btn-primary:active { transform: translateY(0); }
-		.google-btn { border: 1.5px solid var(--border); border-radius: 10px; padding: 0.75rem; color: var(--ink); background: white; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 500; }
-		.google-btn:hover { background: var(--light-bg); border-color: var(--blue); color: var(--blue); }
-		.google-icon { width: 18px; height: 18px; flex-shrink: 0; }
-		.divider { display: flex; align-items: center; gap: 1rem; color: #a0aec0; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
-		.divider::before, .divider::after { content: ''; height: 1px; flex: 1; background: var(--border); }
-		.form-check-input { border-color: var(--border); cursor: pointer; }
-		.form-check-input:checked { background-color: var(--blue); border-color: var(--blue); }
-		.form-check-label { cursor: pointer; font-size: 0.9rem; }
-		.small-link { transition: color 0.2s ease; }
-		.small-link:hover { color: var(--blue); }
-		.alert { border: none; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; }
-		.alert p { margin: 0; }
-		.alert-danger { background-color: #fed7d7; color: #742a2a; }
-		.alert-success { background-color: #c6f6d5; color: #22543d; }
-		@media (max-width: 991.98px) {
-			.art-panel { min-height: auto; padding: 3rem 2rem; }
-			.login-card { padding: 2.5rem 1.5rem; }
-			.art-copy h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
-		}
-		@media (max-width: 576px) {
-			.login-shell { min-height: auto; }
-			.art-panel { min-height: auto; padding: 2rem 1.5rem; }
-			.login-card { padding: 2rem 1.5rem; margin-bottom: 1rem; }
-			.login-card h2 { font-size: 1.8rem; }
-			.form-panel { min-height: auto; padding: 1rem; }
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in | Docmind</title>
+
+    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css}"
+          rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link th:href="@{https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap}"
+          rel="stylesheet">
+
+    <style>
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        :root {
+            --ink: #111827;
+            --muted: #6b7280;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --border: #e5e7eb;
+            --surface: #ffffff;
+            --soft: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 10% 20%, rgba(99,102,241,.08), transparent 35%),
+                radial-gradient(circle at 90% 80%, rgba(236,72,153,.07), transparent 35%),
+                #f8fafc;
+        }
+
+
+        /* =========================================================
+           MAIN LAYOUT
+        ========================================================= */
+
+        .login-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: stretch;
+        }
+
+        /*
+         * Important:
+         * Do NOT rely on Bootstrap's row negative margins here.
+         * The two panels explicitly occupy 50% each.
+         */
+
+        .art-panel {
+            position: relative;
+            width: 50%;
+            min-height: 100vh;
+            overflow: hidden;
+
+            padding: 42px 55px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(255,255,255,.18),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(236,72,153,.25),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #4f46e5 0%,
+                    #6366f1 40%,
+                    #7c3aed 72%,
+                    #9333ea 100%
+                );
+        }
+
+
+        /* =========================================================
+           DECORATIVE BACKGROUND
+        ========================================================= */
+
+        .art-panel::before {
+            content: "";
+            position: absolute;
+            width: 650px;
+            height: 650px;
+
+            top: -280px;
+            right: -250px;
+
+            border-radius: 50%;
+
+            border: 1px solid rgba(255,255,255,.16);
+            box-shadow:
+                0 0 0 70px rgba(255,255,255,.025),
+                0 0 0 140px rgba(255,255,255,.02);
+
+            animation: rotateOrb 30s linear infinite;
+        }
+
+        .art-panel::after {
+            content: "";
+            position: absolute;
+
+            width: 450px;
+            height: 450px;
+
+            bottom: -250px;
+            left: -180px;
+
+            border-radius: 50%;
+
+            border: 1px solid rgba(255,255,255,.13);
+
+            box-shadow:
+                0 0 0 55px rgba(255,255,255,.025),
+                0 0 0 110px rgba(255,255,255,.018);
+
+            animation: floatOrb 8s ease-in-out infinite;
+        }
+
+        @keyframes rotateOrb {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes floatOrb {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-25px);
+            }
+        }
+
+
+        /* =========================================================
+           BRAND
+        ========================================================= */
+
+        .brand {
+            position: relative;
+            z-index: 5;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+
+            width: fit-content;
+
+            font-size: 1.25rem;
+            font-weight: 700;
+
+            letter-spacing: .08em;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.2);
+
+            backdrop-filter: blur(10px);
+
+            font-size: 1.1rem;
+        }
+
+
+        /* =========================================================
+           HERO CONTENT
+        ========================================================= */
+
+        .art-copy {
+            position: relative;
+            z-index: 5;
+
+            max-width: 560px;
+
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 13px;
+
+            border-radius: 100px;
+
+            background: rgba(255,255,255,.11);
+            border: 1px solid rgba(255,255,255,.16);
+
+            backdrop-filter: blur(10px);
+
+            font-size: .75rem;
+            font-weight: 700;
+
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: white;
+
+            box-shadow: 0 0 12px rgba(255,255,255,.8);
+        }
+
+        .art-copy h1 {
+            margin-top: 28px;
+            margin-bottom: 22px;
+
+            font-family: 'Playfair Display', serif;
+
+            font-size: clamp(3rem, 5vw, 5.2rem);
+            line-height: 1.02;
+
+            letter-spacing: -.04em;
+
+            font-weight: 700;
+        }
+
+        .gradient-word {
+            background:
+                linear-gradient(
+                    90deg,
+                    #ffffff,
+                    #e0e7ff,
+                    #fbcfe8
+                );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .art-copy p {
+            max-width: 500px;
+
+            margin: 0;
+
+            color: rgba(255,255,255,.82);
+
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+
+        /* =========================================================
+           FEATURE CARDS
+        ========================================================= */
+
+        .feature-row {
+            position: relative;
+            z-index: 5;
+
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 12px;
+
+            margin-top: 35px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 10px 14px;
+
+            border-radius: 12px;
+
+            background: rgba(255,255,255,.09);
+            border: 1px solid rgba(255,255,255,.13);
+
+            backdrop-filter: blur(12px);
+
+            color: rgba(255,255,255,.9);
+
+            font-size: .82rem;
+            font-weight: 500;
+        }
+
+        .feature-icon {
+            font-size: .9rem;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .art-footer {
+            position: relative;
+            z-index: 5;
+
+            color: rgba(255,255,255,.6);
+
+            font-size: .78rem;
+        }
+
+
+        /* =========================================================
+           RIGHT PANEL
+        ========================================================= */
+
+        .form-panel {
+            width: 50%;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 50px;
+
+            background:
+                radial-gradient(
+                    circle at 80% 10%,
+                    rgba(99,102,241,.06),
+                    transparent 30%
+                ),
+                #ffffff;
+        }
+
+
+        /* =========================================================
+           LOGIN CARD
+        ========================================================= */
+
+        .login-card {
+            width: min(100%, 470px);
+
+            padding: 48px 44px;
+
+            background: rgba(255,255,255,.96);
+
+            border: 1px solid rgba(229,231,235,.9);
+
+            border-radius: 28px;
+
+            box-shadow:
+                0 30px 80px rgba(15,23,42,.08),
+                0 10px 30px rgba(99,102,241,.06);
+
+            animation: cardEnter .7s cubic-bezier(.2,.8,.2,1);
+        }
+
+        @keyframes cardEnter {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        /* =========================================================
+           LOGIN HEADING
+        ========================================================= */
+
+        .welcome {
+            margin-bottom: 9px;
+
+            color: var(--primary);
+
+            font-size: .72rem;
+            font-weight: 700;
+
+            letter-spacing: .14em;
+        }
+
+        .login-card h2 {
+            margin-bottom: 10px;
+
+            font-family: 'Playfair Display', serif;
+
+            font-size: 2.55rem;
+            line-height: 1.15;
+
+            letter-spacing: -.03em;
+
+            color: #111827;
+        }
+
+        .subtitle {
+            color: #6b7280;
+
+            font-size: .92rem;
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           ALERTS
+        ========================================================= */
+
+        .alert {
+            border: 0;
+            border-radius: 14px;
+
+            padding: 14px 16px;
+
+            margin-bottom: 22px;
+
+            font-size: .86rem;
+        }
+
+        .alert p {
+            margin: 0;
+        }
+
+        .alert-danger {
+            color: #991b1b;
+
+            background: #fef2f2;
+
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert-success {
+            color: #166534;
+
+            background: #f0fdf4;
+
+            border-left: 4px solid #22c55e;
+        }
+
+
+        /* =========================================================
+           FORM
+        ========================================================= */
+
+        .form-label {
+            margin-bottom: 8px;
+
+            color: #1f2937;
+
+            font-size: .86rem;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            left: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #9ca3af;
+
+            font-size: .95rem;
+
+            pointer-events: none;
+        }
+
+        .form-control {
+            width: 100%;
+
+            min-height: 52px;
+
+            padding: .85rem 1rem .85rem 43px;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+
+            background: #f9fafb;
+
+            color: #111827;
+
+            font-size: .9rem;
+
+            transition:
+                border-color .25s ease,
+                box-shadow .25s ease,
+                background .25s ease,
+                transform .25s ease;
+        }
+
+        .form-control:hover {
+            border-color: #d1d5db;
+            background: #ffffff;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+
+            background: #ffffff;
+
+            box-shadow:
+                0 0 0 4px rgba(99,102,241,.10);
+
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #b6bcc7;
+        }
+
+
+        /* =========================================================
+           LINKS
+        ========================================================= */
+
+        .small-link {
+            color: #6366f1;
+
+            text-decoration: none;
+
+            transition: color .2s ease;
+        }
+
+        .small-link:hover {
+            color: #ec4899;
+        }
+
+        .forgot-link {
+            font-size: .78rem;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           REMEMBER ME
+        ========================================================= */
+
+        .form-check {
+            padding-left: 1.65rem;
+        }
+
+        .form-check-input {
+            margin-left: -1.65rem;
+
+            width: 17px;
+            height: 17px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .form-check-label {
+            color: #6b7280;
+
+            font-size: .82rem;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================================================
+           LOGIN BUTTON
+        ========================================================= */
+
+        .btn-primary {
+            min-height: 53px;
+
+            border: 0;
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #7c3aed
+                );
+
+            color: white;
+
+            font-size: .9rem;
+            font-weight: 700;
+
+            box-shadow:
+                0 10px 25px rgba(99,102,241,.24);
+
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 15px 32px rgba(99,102,241,.32);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+
+        /* =========================================================
+           DIVIDER
+        ========================================================= */
+
+        .divider {
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+
+            color: #9ca3af;
+
+            font-size: .68rem;
+            font-weight: 700;
+
+            letter-spacing: .1em;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background:
+                linear-gradient(
+                    to right,
+                    transparent,
+                    #e5e7eb
+                );
+        }
+
+        .divider::after {
+            background:
+                linear-gradient(
+                    to left,
+                    transparent,
+                    #e5e7eb
+                );
+        }
+
+
+        /* =========================================================
+           GOOGLE BUTTON
+        ========================================================= */
+
+        .google-btn {
+            min-height: 52px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+
+            background: #ffffff;
+
+            color: #1f2937;
+
+            font-size: .86rem;
+            font-weight: 600;
+
+            transition:
+                background .25s ease,
+                border-color .25s ease,
+                transform .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .google-btn:hover {
+            background: #f8fafc;
+
+            border-color: #c7d2fe;
+
+            color: #4338ca;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 22px rgba(15,23,42,.07);
+        }
+
+        .google-icon {
+            width: 19px;
+            height: 19px;
+
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================================
+           REGISTER TEXT
+        ========================================================= */
+
+        .register-text {
+            color: #9ca3af;
+
+            font-size: .8rem;
+        }
+
+        .register-text a {
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 991.98px) {
+
+            .login-shell {
+                display: block;
+            }
+
+            .art-panel {
+                width: 100%;
+                min-height: 330px;
+
+                padding: 30px 28px;
+            }
+
+            .art-copy {
+                margin-top: 50px;
+                margin-bottom: 10px;
+            }
+
+            .art-copy h1 {
+                font-size: 3rem;
+            }
+
+            .feature-row {
+                display: none;
+            }
+
+            .art-footer {
+                display: none;
+            }
+
+            .form-panel {
+                width: 100%;
+                min-height: auto;
+
+                padding: 35px 24px 50px;
+            }
+
+            .login-card {
+                width: min(100%, 480px);
+            }
+        }
+
+
+        @media (max-width: 576px) {
+
+            .art-panel {
+                min-height: 285px;
+
+                padding: 24px 20px;
+            }
+
+            .brand {
+                font-size: 1.05rem;
+            }
+
+            .brand-icon {
+                width: 34px;
+                height: 34px;
+            }
+
+            .art-copy {
+                margin-top: 35px;
+            }
+
+            .eyebrow {
+                font-size: .65rem;
+            }
+
+            .art-copy h1 {
+                margin-top: 20px;
+                margin-bottom: 13px;
+
+                font-size: 2.35rem;
+            }
+
+            .art-copy p {
+                font-size: .88rem;
+                line-height: 1.6;
+            }
+
+            .form-panel {
+                padding: 20px 15px 35px;
+            }
+
+            .login-card {
+                padding: 32px 22px;
+
+                border-radius: 22px;
+            }
+
+            .login-card h2 {
+                font-size: 2.1rem;
+            }
+        }
+
+    </style>
 </head>
+
 <body>
-<main class="row g-0 login-shell">
-	<section class="col-lg-6 d-none d-lg-block art-panel">
-		<div class="brand fs-4">✦ DOCMIND</div>
-		<div class="art-copy">
-			<p class="text-uppercase small fw-semibold opacity-75 mb-3">Your intelligent workspace</p>
-			<h1>Make every document work smarter.</h1>
-			<p class="lead opacity-75 mt-4">Organize ideas, discover insights, and bring your best work together in one beautiful place.</p>
-		</div>
-	</section>
-	<section class="col-lg-6 form-panel">
-		<div class="login-card">
-			<div class="mb-5">
-				<p class="text-primary fw-semibold mb-2">WELCOME BACK</p>
-				<h2 class="mb-2">Log in to Docmind</h2>
-				<p class="subtitle mb-0">Enter your details to continue your journey.</p>
-			</div>
-			<!-- error -->
-			<div class="alert alert-danger" th:if="${error}">
-				<p th:text="${error}"></p>
-			</div>
-			<!-- success -->
-			<div class="alert alert-success" th:if="${success}">
-				<p th:text="${success}"></p>
-			</div>
 
-			<form th:action="@{/auth/login}" th:object="${userLogin}" method="post">
-				<div class="mb-3">
-					<label for="email" class="form-label fw-semibold">Email</label>
-					<input type="email" class="form-control" th:field="*{email}" id="email" placeholder="you@example.com" autocomplete="username" required>
-				</div>
-				<div class="mb-2">
-					<div class="d-flex justify-content-between align-items-center">
-						<label for="password" class="form-label fw-semibold">Password</label>
-						<a th:href="@{/forgot-password}" class="small-link small text-decoration-none">Forgot password?</a>
-					</div>
-					<input type="password" class="form-control" th:field="*{password}" id="password" placeholder="Enter your password" autocomplete="current-password" required>
-				</div>
-				<div class="form-check mb-4 mt-3">
-					<input class="form-check-input" type="checkbox" id="remember" name="remember">
-					<label class="form-check-label small-link" for="remember">Remember me</label>
-				</div>
-				<button type="submit" class="btn btn-primary w-100 fw-semibold">Log in</button>
-			</form>
+<main class="login-shell">
 
-			<div class="divider my-4">OR CONTINUE WITH</div>
-            <!-- http://localhost:8080/oauth2/authorization/google -->
-			<a th:href="@{/oauth2/authorization/google}" class="btn google-btn w-100 fw-semibold">
-				<svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.35 12.23c0-.72-.06-1.41-.18-2.08H12v3.94h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.25z"/><path fill="#34A853" d="M12 21.64c2.63 0 4.84-.87 6.45-2.36l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.64z"/><path fill="#FBBC05" d="M6.54 13.72A5.85 5.85 0 0 1 6.23 12c0-.6.1-1.18.31-1.72V7.75H3.3A9.74 9.74 0 0 0 2.26 12c0 1.54.37 3 1.04 4.25l3.24-2.53z"/><path fill="#EA4335" d="M12 6.25c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.84 3.3 14.63 2.36 12 2.36a9.74 9.74 0 0 0-8.7 5.39l3.24 2.53C6.85 7.97 9 6.25 12 6.25z"/></svg>
-				Sign up with Google
-			</a>
-			<p class="text-center mt-4 mb-0 small-link">New to Docmind? <a th:href="@{/auth/registration}" class="text-primary fw-semibold text-decoration-none">Create an account</a></p>
-		</div>
-	</section>
+    <!-- =====================================================
+         LEFT / BRAND PANEL
+    ====================================================== -->
+
+    <section class="art-panel">
+
+        <div class="brand">
+            <span class="brand-icon">✦</span>
+            DOCMIND
+        </div>
+
+
+        <div class="art-copy">
+
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                Your intelligent workspace
+            </div>
+
+            <h1>
+                Make every
+                <span class="gradient-word">document</span>
+                work smarter.
+            </h1>
+
+            <p>
+                Organize ideas, discover insights, and bring your
+                best work together in one beautiful place.
+            </p>
+
+
+            <div class="feature-row">
+
+                <div class="feature">
+                    <span class="feature-icon">✦</span>
+                    Smart insights
+                </div>
+
+                <div class="feature">
+                    <span class="feature-icon">◈</span>
+                    Organized documents
+                </div>
+
+                <div class="feature">
+                    <span class="feature-icon">✓</span>
+                    Work effortlessly
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="art-footer">
+            © 2026 Docmind · Your ideas, intelligently organized.
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RIGHT / LOGIN PANEL
+    ====================================================== -->
+
+    <section class="form-panel">
+
+        <div class="login-card">
+
+            <div class="mb-4">
+
+                <p class="welcome mb-2">
+                    WELCOME BACK
+                </p>
+
+                <h2>
+                    Log in to Docmind
+                </h2>
+
+                <p class="subtitle mb-0">
+                    Enter your details to continue your journey.
+                </p>
+
+            </div>
+
+
+            <!-- ERROR -->
+
+            <div class="alert alert-danger"
+                 th:if="${error}">
+
+                <p th:text="${error}"></p>
+
+            </div>
+
+
+            <!-- SUCCESS -->
+
+            <div class="alert alert-success"
+                 th:if="${success}">
+
+                <p th:text="${success}"></p>
+
+            </div>
+
+
+            <!-- =================================================
+                 LOGIN FORM
+                 BACKEND ATTRIBUTES PRESERVED
+            ================================================== -->
+
+            <form th:action="@{/auth/login}"
+                  th:object="${userLogin}"
+                  method="post">
+
+
+                <!-- EMAIL -->
+
+                <div class="mb-3">
+
+                    <label for="email"
+                           class="form-label">
+                        Email
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+                        <input type="email"
+                               class="form-control"
+                               th:field="*{email}"
+                               id="email"
+                               placeholder="you@example.com"
+                               autocomplete="username"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="mb-2">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <label for="password"
+                               class="form-label">
+                            Password
+                        </label>
+
+                        <a th:href="@{/auth/forgot-password}"
+                           class="small-link forgot-link">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ●
+                        </span>
+
+                        <input type="password"
+                               class="form-control"
+                               th:field="*{password}"
+                               id="password"
+                               placeholder="Enter your password"
+                               autocomplete="current-password"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REMEMBER -->
+
+                <div class="form-check mb-4 mt-3">
+
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="remember"
+                           name="remember">
+
+                    <label class="form-check-label"
+                           for="remember">
+                        Remember me
+                    </label>
+
+                </div>
+
+
+                <!-- LOGIN -->
+
+                <button type="submit"
+                        class="btn btn-primary w-100">
+
+                    Log in
+
+                </button>
+
+            </form>
+
+
+            <!-- DIVIDER -->
+
+            <div class="divider my-4">
+                OR CONTINUE WITH
+            </div>
+
+
+            <!-- GOOGLE -->
+
+            <a th:href="@{/oauth2/authorization/google}"
+               class="btn google-btn w-100">
+
+                <svg class="google-icon"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+
+                    <path fill="#4285F4"
+                          d="M21.35 12.23c0-.72-.06-1.41-.18-2.08H12v3.94h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.25z"/>
+
+                    <path fill="#34A853"
+                          d="M12 21.64c2.63 0 4.84-.87 6.45-2.36l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.64z"/>
+
+                    <path fill="#FBBC05"
+                          d="M6.54 13.72A5.85 5.85 0 0 1 6.23 12c0-.6.1-1.18.31-1.72V7.75H3.3A9.74 9.74 0 0 0 2.26 12c0 1.54.37 3 1.04 4.25l3.24-2.53z"/>
+
+                    <path fill="#EA4335"
+                          d="M12 6.25c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.84 3.3 14.63 2.36 12 2.36a9.74 9.74 0 0 0-8.7 5.39l3.24 2.53C6.85 7.97 9 6.25 12 6.25z"/>
+
+                </svg>
+
+                Sign up with Google
+
+            </a>
+
+
+            <!-- REGISTER -->
+
+            <p class="text-center mt-4 mb-0 register-text">
+
+                New to Docmind?
+
+                <a th:href="@{/auth/registration}"
+                   class="small-link text-decoration-none">
+
+                    Create an account
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </section>
+
 </main>
+
 </body>
 </html>
