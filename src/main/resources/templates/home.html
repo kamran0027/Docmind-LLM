@@ -36,7 +36,8 @@
 
             <!-- Sidebar Footer - Profile -->
             <div class="sidebar-footer">
-                <button class="profile-btn" id="profileBtn">
+                <button class="profile-btn" id="profileBtn" type="button"
+                    th:onclick="|window.location.href='@{/user/profile}'|">
                     <i class="fas fa-user-circle"></i>
                     <span>Profile</span>
                 </button>

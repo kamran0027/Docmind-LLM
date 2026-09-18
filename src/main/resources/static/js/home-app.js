@@ -1015,10 +1015,10 @@ async function renameConversation(
 
         const response =
             await fetch(
-                `/c/${conversationId}/rename`,
+                `/c/conversation/${conversationId}/title`,
                 {
 
-                    method: 'PUT',
+                    method: 'PATCH',
 
                     headers: {
                         'Content-Type':
@@ -1084,9 +1084,12 @@ async function deleteConversation(
 
     try {
 
+        console.log(
+            `Deleting conversation ${conversationId}...`
+        );
         const response =
             await fetch(
-                `/c/${conversationId}`,
+                `/c/conversation/${conversationId}`,
                 {
 
                     method: 'DELETE'

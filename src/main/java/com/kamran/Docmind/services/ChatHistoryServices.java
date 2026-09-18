@@ -94,5 +94,13 @@ public class ChatHistoryServices{
                                     }).toList();
         return dtos;
     }
+
+    @Transactional 
+    public void deleteConversation(String conversationId){ 
+        String email=SecurityContextHolder.getContext().getAuthentication().getName();
+        Conversation conversation=conversationRepositry.findByIdAndUserEmail(conversationId,email)
+                                        .orElseThrow(()->new RuntimeException("Conversation not found or user not authorized to delete it"));
+        conversationRepositry.delete(conversation);
+    }
     
 }

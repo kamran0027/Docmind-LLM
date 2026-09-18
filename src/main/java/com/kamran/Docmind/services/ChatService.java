@@ -59,5 +59,15 @@ public class ChatService {
         return conversationDtos;
 
     }
+
+    public void renameConversation(String conversationId, String newTitle) {
+        Conversation conversation = conversationRepositry.findById(conversationId)
+                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+        if (conversation.isTemporary()) {
+            throw new RuntimeException("Cannot rename a temporary conversation");
+        }
+        conversation.setTitle(newTitle);
+        conversationRepositry.save(conversation);
+    }
     
 }

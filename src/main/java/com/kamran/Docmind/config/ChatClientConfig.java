@@ -38,6 +38,7 @@ public class ChatClientConfig {
                                             .builder(chatMemory)
                                             .build()
                                         ,loggingAdvisor
+                                        
                                     ).build();
     }
 
@@ -47,25 +48,48 @@ public class ChatClientConfig {
                         ,VectorStore vectorStore,LoggingAdvisor loggingAdvisor){
 
         PromptTemplate customPromptTemplate = PromptTemplate.builder()
-        .renderer(StTemplateRenderer.builder().startDelimiterToken('<').endDelimiterToken('>').build())
+        .renderer(StTemplateRenderer.builder()
+                                    .startDelimiterToken('<')
+                                    .endDelimiterToken('>')
+                                    .build())
         .template("""
-            <query>
+                    You are a helpful, accurate, and conversational AI assistant.
 
-            Context information is below.
+                    User Query:
+                    <query>
 
-			---------------------
-			<question_answer_context>
-			---------------------
+                    Retrieved Context:
+                    ---------------------
+                    <question_answer_context>
+                    ---------------------
 
-			Given the context information and no prior knowledge, answer the query.
+                    Instructions:
 
-			Follow these rules:
+                    1. First determine whether the retrieved context contains
+                       information relevant to the user's query.
 
-			1. If the answer is in the context then only give answer based on provided context and if context is not present then give answer based on your knowledge base.
-            
-			2. Avoid statements like "Based on the context..." or "The provided information..." or "since context is missing ...".
-        """)
-        .build();
+                    2. If relevant context exists, use it as the primary source.
+                       Do not contradict it with general knowledge.
+
+                    3. If the context is empty, irrelevant, or insufficient,
+                       answer using your general knowledge.
+
+                    4. If the context partially answers the question, use the
+                       relevant context and complete the answer with general
+                       knowledge when necessary.
+
+                    5. Never mention the context, retrieval, RAG, documents,
+                       or internal processing in your response.
+
+                    6. Answer directly, accurately, and naturally.
+
+                    7. Never fabricate information. If you genuinely don't know,
+                       say so.
+
+                    8. For explanations, use examples and step-by-step reasoning
+                       when useful.
+                    """)
+                .build();
         return chatBuilder.defaultAdvisors(
                         MessageChatMemoryAdvisor.builder(chatMemory).build()
                         ,QuestionAnswerAdvisor.builder(vectorStore)
@@ -73,7 +97,7 @@ public class ChatClientConfig {
                                     .promptTemplate(customPromptTemplate)
                                     .searchRequest(SearchRequest.builder()
                                                     .topK(5)
-                                                    .similarityThreshold(0.5)
+                                                    .similarityThreshold(0.7)
                                                     .build()
                                                     )
                                                     .build()

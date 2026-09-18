@@ -5,11 +5,15 @@ package com.kamran.Docmind.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.ai.document.Document;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -144,5 +148,36 @@ public class ConversationController {
     }
 
 
+    @DeleteMapping("/conversation/{conversationId}")
+    public ResponseEntity<Void> deleteConversation(@PathVariable String conversationId) {
+        System.out.println("Attempting to delete conversation: " + conversationId);
+        try {
+            chatHistoryServices.deleteConversation(conversationId);
+            System.out.println("✓ Conversation deleted successfully: " + conversationId);
+                return ResponseEntity.noContent().build();
+        }
+
+        catch (Exception e) {
+            System.err.println("✗ Error deleting conversation: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @PatchMapping("/conversation/{conversationId}/title")
+    public ResponseEntity<Void> renameConversation(@PathVariable String conversationId,
+                                                @RequestBody Map<String, String> request){
+        
+        String newTitle = request.get("title");
+        try {
+            chatService.renameConversation(conversationId, newTitle);
+            System.out.println("✓ Conversation renamed successfully: " + conversationId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            System.err.println("✗ Error renaming conversation: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
 
 }
