@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kamran.Docmind.DTO.ProfileDto;
+import com.kamran.Docmind.Exception.PremiumUserException;
 import com.kamran.Docmind.services.UserService;
 
 @Controller
@@ -21,9 +22,13 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(Model model,Authentication authentication) {
+
         String userEmail = authentication.getName(); // Get the email of the logged-in user
         ProfileDto profileDto = userService.getProfile(userEmail);
         model.addAttribute("profile", profileDto);
+        // if(3<5){
+        //     throw new PremiumUserException("user profile is not premium so you cannot acces it");
+        // }
         return "profile";
     }
 

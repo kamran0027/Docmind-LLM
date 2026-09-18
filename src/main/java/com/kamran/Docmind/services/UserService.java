@@ -9,6 +9,7 @@ import com.kamran.Docmind.DTO.ProfileDto;
 import com.kamran.Docmind.Entity.Role;
 import com.kamran.Docmind.Entity.User;
 import com.kamran.Docmind.Entity.UserType;
+import com.kamran.Docmind.Exception.PremiumUserException;
 import com.kamran.Docmind.repository.UserRepository;
 
 @Service
@@ -46,6 +47,7 @@ public class UserService {
     }
 
     public ProfileDto getProfile(String email){
+
         Optional<User> userOptional=userRepository.findByEmail(email);
         if(userOptional.isPresent()){
             User user=userOptional.get();
